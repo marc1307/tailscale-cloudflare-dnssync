@@ -1,6 +1,6 @@
-import requests
-import json
+import requests, json
 
+from termcolor import cprint, colored
 from requests.models import Response
 
 def getZoneId(token, domain):
@@ -61,7 +61,7 @@ def CreateDNSRecords(token, domain, name, type, content):
     data = json.loads(response.text)
 
     if data['success'] == True:
-        print("created")
+        print("--> [CLOUDFLARE] [{code}] {msg}".format(code=response.status_code, msg=colored('record created', "green")))
         return True
     else:
         print(json.dumps(data['errors']))
@@ -74,6 +74,7 @@ def DeleteDNSRecords(token, domain, id):
     }
     response = requests.request("DELETE", url, headers=headers)
     data = json.loads(response.text)
+    print("--> [CLOUDFLARE] [{code}] {msg}".format(code=response.status_code, msg=colored('record deleted', "green")))
 
 
 
