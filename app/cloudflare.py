@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, re
 
 from termcolor import cprint, colored
 from requests.models import Response
@@ -24,7 +24,7 @@ def getZoneId(token, domain):
     #print(json.dumps(json.loads(response.text), indent=2))
 
 
-def GetZoneRecords(token, domain, hostname=False):
+def getZoneRecords(token, domain, hostname=False):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=getZoneId(token, domain))
     payload={}
     headers = {
@@ -45,7 +45,7 @@ def GetZoneRecords(token, domain, hostname=False):
     else:
         exit('shit')
 
-def CreateDNSRecords(token, domain, name, type, content):
+def createDNSRecord(token, domain, name, type, content):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=getZoneId(token, domain))
     payload={
         'type': type,
@@ -64,10 +64,10 @@ def CreateDNSRecords(token, domain, name, type, content):
         print("--> [CLOUDFLARE] [{code}] {msg}".format(code=response.status_code, msg=colored('record created', "green")))
         return True
     else:
-        print(json.dumps(data['errors']))
-        exit('fuck')
+        cprint("[ERROR]", 'red')
+        exit(json.dumps(data['errors'], indent=2))
 
-def DeleteDNSRecords(token, domain, id):
+def deleteDNSRecord(token, domain, id):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records/{identifier}".format(zone_identifier=getZoneId(token, domain), identifier=id)
     headers = {
         'Authorization': "Bearer {}".format(token)
@@ -76,7 +76,9 @@ def DeleteDNSRecords(token, domain, id):
     data = json.loads(response.text)
     print("--> [CLOUDFLARE] [{code}] {msg}".format(code=response.status_code, msg=colored('record deleted', "green")))
 
-
+def isValidDNSRecord(name):
+    regex = "^([a-zA-Z]|\d|-|\.)*$"
+    return re.match(regex, name)
 
 
 
