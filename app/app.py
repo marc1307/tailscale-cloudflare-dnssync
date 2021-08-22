@@ -11,7 +11,7 @@ from config import getConfig
 def main():
     config = getConfig()
     cf_recordes = GetZoneRecords(config['cf-key'], config['cf-domain'])
-    ts_records = getTailscaleDevice(config['ts-key'])
+    ts_records = getTailscaleDevice(config['ts-key'], config['ts-tailnet'])
 
     records_typemap = {
         4: 'A',

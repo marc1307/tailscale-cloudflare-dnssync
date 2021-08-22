@@ -3,8 +3,8 @@ import ipaddress
 from requests.auth import HTTPBasicAuth
 
 ### Get Data
-def getTailscaleDevice(apikey):
-    url = "https://api.tailscale.com/api/v2/tailnet/marc1307.de/devices"
+def getTailscaleDevice(apikey, tailnet):
+    url = "https://api.tailscale.com/api/v2/tailnet/{tailnet}/devices".format(tailnet=tailnet)
     payload={}
     headers = {
     }
@@ -41,9 +41,7 @@ def isTailscaleIP(ip):
         else:
             return False
     else:
-        exit("dafuq?!")
-
-    
+        exit("did we run out of ipv6 addresses?")
 
 
 if __name__ == '__main__':
