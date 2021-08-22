@@ -5,7 +5,7 @@ from requests.api import delete
 from termcolor import colored, cprint
 
 from cloudflare import CreateDNSRecords, DeleteDNSRecords, GetZoneRecords
-from tailscale import getTailscaleDevice
+from tailscale import getTailscaleDevice, isTailscaleIP
 from config import getConfig
 
 def main():
@@ -26,7 +26,7 @@ def main():
         if any(a['name'] == ts_rec['hostname'].lower()+"."+config['cf-domain'] and a['content'] == ts_rec['address'] for a in cf_recordes):
             print("[{state}]: {host} -> {ip}".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("FOUND", "green")))
         else:
-            print("[{state}]: {host} -> {ip}".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("MISSING", "red")))
+            print("[{state}]: {host} -> {ip}".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("ADDING", "yellow")))
             ip = ipaddress.ip_address(ts_rec['address'])
         
             CreateDNSRecords(config['cf-key'], config['cf-domain'], ts_rec['hostname'], records_typemap[ip.version], ts_rec['address'])
@@ -46,8 +46,14 @@ def main():
         if any(a['hostname'] == cf_rec['name'].split('.')[0] and a['address'] == cf_rec['content'] for a in ts_records):
             print("[{state}]: {host} -> {ip}".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored("CURRENT", "green")))
         else:
-            print("[{state}]: {host} -> {ip}".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored('OLD', "red")))
-            DeleteDNSRecords(config['cf-key'], config['cf-domain'], cf_rec['id'])
+            if (isTailscaleIP(cf_rec['content'])):
+                print("[{state}]: {host} -> {ip}".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored('DELETING', "yellow")))
+                DeleteDNSRecords(config['cf-key'], config['cf-domain'], cf_rec['id'])
+            else:
+                print("[{state}]: {host} -> {ip} (IP does not belong to a tailscale host. please remove manualy)".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored('SKIP DELETE', "red")))
+
+
+
 
 if __name__ == '__main__':
     main()

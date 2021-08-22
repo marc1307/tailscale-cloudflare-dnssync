@@ -1,4 +1,5 @@
 import requests, json
+import ipaddress
 from requests.auth import HTTPBasicAuth
 
 ### Get Data
@@ -25,6 +26,25 @@ def getTailscaleDevice(apikey):
         return output
     else:
         exit('fuck')
+
+def isTailscaleIP(ip):
+    ip = ipaddress.ip_address(ip)
+
+    if (ip.version == 6):
+        if (ip in ipaddress.IPv6Network('fd7a:115c:a1e0::/48')):
+            return True
+        else:
+            return False
+    elif (ip.version == 4):
+        if (ip in ipaddress.IPv4Network('100.64.0.0/10')):
+            return True
+        else:
+            return False
+    else:
+        exit("dafuq?!")
+
+    
+
 
 if __name__ == '__main__':
     print(json.dumps(getTailscaleDevice(), indent=2))
