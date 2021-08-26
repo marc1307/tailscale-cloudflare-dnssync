@@ -46,7 +46,7 @@ def getZoneRecords(token, domain, hostname=False):
         exit('shit')
 
 def createDNSRecord(token, domain, name, type, content):
-    url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=getZoneId(token, domain))
+    url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
     payload={
         'type': type,
         'name': name+"."+domain,
