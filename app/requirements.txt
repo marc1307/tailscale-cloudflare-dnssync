@@ -1,5 +1,6 @@
 certifi==2021.5.30
 charset-normalizer==2.0.4
+configparser==5.0.2
 idna==3.2
 ipaddress==1.0.23
 requests==2.26.0
