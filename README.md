@@ -1,5 +1,14 @@
 # tailscale-cloudflare-dnssync
-Syncs Tailscale host IPs to a cloudflare hosted dns zone
+Syncs Tailscale host IPs to a cloudflare hosted DNS zone.
+Basically works like Magic DNS, but with your domain.
+The main benefit for me is the ability to use letsencrypt with certbot + dns challenge
+
+## Features
+- Adds ipv4 and ipv6 records for all devices
+- Remove delete device
+- Updates changed hosts
+- Checks if DNS records is part of tailscale network (100.64.0.0/12 or fd7a:115c:a1e0::/48) before deleting records :P
+
 ## Run
 ### Run using docker (using env var)
 ```
