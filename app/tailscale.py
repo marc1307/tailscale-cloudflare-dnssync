@@ -1,6 +1,7 @@
 import requests, json
 import ipaddress
 from requests.auth import HTTPBasicAuth
+from termcolor import colored
 
 ### Get Data
 def getTailscaleDevice(apikey, tailnet):
@@ -9,13 +10,13 @@ def getTailscaleDevice(apikey, tailnet):
     headers = {
     }
     response = requests.request("GET", url, headers=headers, data=payload, auth=HTTPBasicAuth(username=apikey, password=""))
-    #print(response.text)
-    #print(json.dumps(json.loads(response.text), indent=2))
+    # print(response.text)
+    # print(json.dumps(json.loads(response.text), indent=2))
 
     output=[]
 
+    data = json.loads(response.text)
     if (response.status_code == 200):
-        data = json.loads(response.text)
         output = []
         for device in data['devices']:
             #print(device['hostname']+": "+json.dumps(device['addresses']))
@@ -25,7 +26,7 @@ def getTailscaleDevice(apikey, tailnet):
                     output.append({'hostname': alterHostname(device['name'].split('.')[0].lower()), 'address': address})
         return output
     else:
-        exit('getTailscaleDevice() - error')
+        exit(colored("getTailscaleDevice() - {status}, {error}".format(status=str(response.status_code), error=data['message']), "red"))
 
 def isTailscaleIP(ip):
     ip = ipaddress.ip_address(ip)

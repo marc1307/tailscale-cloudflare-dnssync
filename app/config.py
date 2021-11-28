@@ -1,6 +1,7 @@
 import configparser, os
 import os.path
 from sys import path
+from termcolor import cprint
 
 keysToImport = ['cf-key', 'cf-domain', 'ts-key', 'ts-tailnet']
 keysOptional = ['prefix', 'postfix']
@@ -33,7 +34,7 @@ def importkey(name, optional=False):
             except:
                 if optional:
                     return ""
-                print("meh2")
+                cprint("ERROR: mandatory configuration not found: {}".format(key), "red")
     
 def getConfig():
     # static = {
