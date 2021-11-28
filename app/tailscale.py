@@ -20,12 +20,12 @@ def getTailscaleDevice(apikey, tailnet):
         for device in data['devices']:
             #print(device['hostname']+": "+json.dumps(device['addresses']))
             for address in device['addresses']:
-                output.append({'hostname': device['hostname'], 'address': address})
+                output.append({'hostname': alterHostname(device['hostname']), 'address': address})
                 if device['name'].split('.')[0].lower() != device['hostname'].lower():
-                    output.append({'hostname': device['name'].split('.')[0].lower(), 'address': address})
+                    output.append({'hostname': alterHostname(device['name'].split('.')[0].lower()), 'address': address})
         return output
     else:
-        exit('fuck')
+        exit('getTailscaleDevice() - error')
 
 def isTailscaleIP(ip):
     ip = ipaddress.ip_address(ip)
@@ -41,8 +41,16 @@ def isTailscaleIP(ip):
         else:
             return False
     else:
-        exit("did we run out of ipv6 addresses?")
+        exit("isTailscaleIP(): - unknown IP version")
 
+def alterHostname(hostname):
+    from config import getConfig
+    config = getConfig()
+    pre = config.get("prefix", "")
+    post = config.get("postfix", "")
+
+    newHostname = "{pre}{hostname}{post}".format(pre=pre, post=post, hostname=hostname)
+    return newHostname
 
 if __name__ == '__main__':
     print(json.dumps(getTailscaleDevice(), indent=2))
