@@ -17,7 +17,7 @@ def getZoneId(token, domain):
             if zone['name'] == domain:
                 return zone['id']
     else:
-        exit('fuck: '+json.dumps(data['errors'], indent=2))
+        exit('getZoneId(): '+json.dumps(data['errors'], indent=2))
     
 
 
@@ -43,7 +43,7 @@ def getZoneRecords(token, domain, hostname=False):
                 output.append(record)
         return output
     else:
-        exit('shit')
+        exit('getZoneRecords() - error')
 
 def createDNSRecord(token, domain, name, type, content):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
@@ -65,7 +65,7 @@ def createDNSRecord(token, domain, name, type, content):
         return True
     else:
         cprint("[ERROR]", 'red')
-        exit(json.dumps(data['errors'], indent=2))
+        exit("createDNSRecord():  "+json.dumps(data['errors'], indent=2))
 
 def deleteDNSRecord(token, domain, id):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records/{identifier}".format(zone_identifier=getZoneId(token, domain), identifier=id)
