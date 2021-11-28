@@ -7,12 +7,14 @@ The main benefit for me is the ability to use letsencrypt with certbot + dns cha
 - Adds ipv4 and ipv6 records for all devices
 - Removes DNS records for deleted devices
 - Updates DNS records after the hostname/alias changes
+- Add a pre- and/or postfixes to dns records
 - Checks if DNS records is part of tailscale network (100.64.0.0/12 or fd7a:115c:a1e0::/48) before deleting records :P
+
 
 ## Run
 ### Run using docker (using env var)
-```
-docker run --rm -it --env-file ~/git/tailscale-cloudflare-dnssync/env.txt ghcr.io/marc1307/tailscale-cloudflare-dnssync:main
+```shell
+docker run --rm -it --env-file ~/git/tailscale-cloudflare-dnssync/env.txt ghcr.io/marc1307/tailscale-cloudflare-dnssync:latest
 ```
 Envfile:
 ```env
@@ -20,11 +22,33 @@ cf-key=<cloudflare api key>
 cf-domain=<cloudflare target zone>
 ts-key=<tailscale api key>
 ts-tailnet=<tailnet>
+#prefix=<prefix for dns records, optional>
+#postfix=<postfix for dns records, optional>
 ```
 tailnet can be found at the top of the tailscale admin page
 
 ### Run using docker (using secrets)
-tbd
+```yaml
+version: "3"
+
+secrets:
+  cf-key:
+    file: "./cloudflare-key.txt"
+  ts-key:
+    file: "./tailscale-key.txt"
+
+services:
+  cloudflare-dns-sync:
+    image: ghcr.io/marc1307/tailscale-cloudflare-dnssync:latest
+    environment:
+      - ts-tailnet=<tailnet>
+      - cf-domain=example.com
+      - prefix=ts-      # optional, adds prefix to dns records
+      - postfix=-ts     # optional, adds postfix to dns records
+    secrets:
+      - cf-key
+      - ts-key
+```
 
 ### Run native using python
 tbd
