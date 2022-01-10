@@ -46,7 +46,15 @@ def main():
         
 
     for cf_rec in cf_recordes:
-        if any(a['hostname'] == cf_rec['name'].split('.')[0] and a['address'] == cf_rec['content'] for a in ts_records):
+        cf_name = cf_rec['name'].rsplit('.' + config['cf-domain'], 1)[0]
+
+        # Ignore any records not matching our prefix/postfix
+        if not cf_name.startswith(config.get('prefix', '')):
+            continue
+        if not cf_name.endswith(config.get('postfix', '')):
+            continue
+
+        if any(a['hostname'] == cf_name and a['address'] == cf_rec['content'] for a in ts_records):
             print("[{state}]: {host} -> {ip}".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored("IN USE", "green")))
         else:
             if (isTailscaleIP(cf_rec['content'])):
