@@ -8,6 +8,7 @@ keysOptional = ['prefix', 'postfix']
 
 def importkey(name, optional=False):
     key = name
+    envKey = key.replace("-", "_")
 
     secretPath = "/run/secrets/"+key
     if (os.path.isfile(secretPath)):
@@ -16,6 +17,8 @@ def importkey(name, optional=False):
         return out
     elif (key in os.environ):
         return os.environ.get(key)
+    elif (envKey in os.environ):
+        return os.environ.get(envKey)
     else:
         try:
             cfgPath = os.path.dirname(os.path.realpath(__file__))+'/config.ini'
