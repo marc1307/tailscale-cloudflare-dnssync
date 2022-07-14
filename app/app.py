@@ -8,6 +8,8 @@ from cloudflare import createDNSRecord, deleteDNSRecord, getZoneRecords, isValid
 from tailscale import getTailscaleDevice, isTailscaleIP
 from config import getConfig
 
+import sys
+
 def main():
     config = getConfig()
     cf_recordes = getZoneRecords(config['cf-key'], config['cf-domain'])
@@ -23,16 +25,20 @@ def main():
     # Check if current hosts already have records:
     for ts_rec in ts_records: 
         #if ts_rec['hostname'] in cf_recordes['name']:
-        if any(a['name'] == ts_rec['hostname'].lower()+"."+config['cf-domain'] and a['content'] == ts_rec['address'] for a in cf_recordes):
+        if config.get("cf-sub"):
+            sub = "." + config.get("cf-sub")
+        else:
+            sub = ""
+        tsfqdn = ts_rec['hostname'].lower()+sub+"."+config['cf-domain']
+        if any(c['name'] == tsfqdn and c['content'] == ts_rec['address'] for c in cf_recordes):
             print("[{state}]: {host} -> {ip}".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("FOUND", "green")))
         else:
             ip = ipaddress.ip_address(ts_rec['address'])
             if isValidDNSRecord(ts_rec['hostname']):
                 print("[{state}]: {host} -> {ip}".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("ADDING", "yellow")))
-                createDNSRecord(config['cf-key'], config['cf-domain'], ts_rec['hostname'], records_typemap[ip.version], ts_rec['address'])
+                createDNSRecord(config['cf-key'], config['cf-domain'], ts_rec['hostname'], records_typemap[ip.version], ts_rec['address'],subdomain=config["cf-sub"])
             else:
                 print("[{state}]: {host}.{tld} -> {ip} -> (Hostname: \"{host}.{tld}\" is not valid)".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("SKIPING", "red"), tld=config['cf-domain']))
-
 
 
 
@@ -46,7 +52,10 @@ def main():
         
 
     for cf_rec in cf_recordes:
-        cf_name = cf_rec['name'].rsplit('.' + config['cf-domain'], 1)[0]
+        if config.get('cf-sub'):
+            sub = '.' + config.get('cf-sub')
+        else: sub = ""
+        cf_name = cf_rec['name'].rsplit(sub + '.' + config['cf-domain'], 1)[0]
 
         # Ignore any records not matching our prefix/postfix
         if not cf_name.startswith(config.get('prefix', '')):

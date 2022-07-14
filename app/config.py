@@ -4,7 +4,7 @@ from sys import path
 from termcolor import cprint
 
 keysToImport = ['cf-key', 'cf-domain', 'ts-key', 'ts-tailnet']
-keysOptional = ['prefix', 'postfix']
+keysOptional = ['cf-sub', 'prefix', 'postfix']
 
 def importkey(name, optional=False):
     key = name
@@ -22,11 +22,12 @@ def importkey(name, optional=False):
     else:
         try:
             cfgPath = os.path.dirname(os.path.realpath(__file__))+'/config.ini'
-            with open(path, 'r') as file:
+            with open(cfgPath, 'r') as file:
                 config = configparser.ConfigParser()
                 config.read(cfgPath)
                 cfg=config['DEFAULT']
-        except:
+        except Exception as e:
+            print(e)
             if optional:
                 return ""
             exit('could not read config file')

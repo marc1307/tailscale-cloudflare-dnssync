@@ -41,11 +41,18 @@ def getZoneRecords(token, domain, hostname=False):
     else:
         exit(colored("getZoneRecords() - error\n{}".format(json.dumps(data['errors'], indent=2)), "red"))
 
-def createDNSRecord(token, domain, name, type, content):
+def createDNSRecord(token, domain, name, type, content, subdomain=None):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
+    if subdomain:
+        fqdn = name+"."+subdomain+"."+domain
+        print(fqdn)
+    else:
+        fqdn = name+"."+domain
+        print(fqdn)
+        
     payload={
         'type': type,
-        'name': name+"."+domain,
+        'name': fqdn,
         'content': content,
         'ttl': 120
     }
@@ -82,4 +89,4 @@ if __name__ == '__main__':
     token = ""
     domain = ""
     print(getZoneId(token, domain))
-    print(json.dumps(GetZoneRecords(token, domain), indent=2))
+    print(json.dumps(getZoneRecords(token, domain), indent=2))
