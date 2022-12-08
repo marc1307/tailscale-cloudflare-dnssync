@@ -50,7 +50,11 @@ def alterHostname(hostname):
     pre = config.get("prefix", "")
     post = config.get("postfix", "")
 
-    newHostname = "{pre}{hostname}{post}".format(pre=pre, post=post, hostname=hostname)
+    newHostname = "{pre}{hostname}{post}".format(
+        pre=pre,
+        post=post,
+        hostname=hostname.replace(" ", "-").lower()
+    )
     return newHostname
 
 if __name__ == '__main__':
