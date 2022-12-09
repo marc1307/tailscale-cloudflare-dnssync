@@ -1,4 +1,4 @@
-certifi==2021.5.30
+certifi==2022.12.7
 charset-normalizer==2.0.4
 configparser==5.0.2
 idna==3.2
