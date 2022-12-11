@@ -45,10 +45,8 @@ def createDNSRecord(token, domain, name, type, content, subdomain=None):
     url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
     if subdomain:
         fqdn = name+"."+subdomain+"."+domain
-        print(fqdn)
     else:
         fqdn = name+"."+domain
-        print(fqdn)
         
     payload={
         'type': type,
