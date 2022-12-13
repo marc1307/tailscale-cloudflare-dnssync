@@ -42,9 +42,9 @@ services:
   cloudflare-dns-sync:
     image: ghcr.io/marc1307/tailscale-cloudflare-dnssync:latest
     environment:
-      - ts-tailnet=<tailnet>
-      - cf-domain=example.com
-      - cf-sub=sub      # optional, uses sub domain for dns records
+      - ts_tailnet=<tailnet>
+      - cf_domain=example.com
+      - cf_sub=sub      # optional, uses sub domain for dns records
       - prefix=ts-      # optional, adds prefix to dns records
       - postfix=-ts     # optional, adds postfix to dns records
     secrets:
