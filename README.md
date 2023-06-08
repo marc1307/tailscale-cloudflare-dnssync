@@ -26,7 +26,8 @@ ts-tailnet=<tailnet>
 #prefix=<prefix for dns records, optional>
 #postfix=<postfix for dns records, optional>
 ```
-tailnet can be found at the top of the tailscale admin page
+> **ts-tailnet** can be found in the [Tailscale Settings](https://login.tailscale.com/admin/settings/general)
+```Settings -> General -> Organization``` or at the top left on the admin panel.
 
 ### Run using docker (using secrets)
 ```yaml
