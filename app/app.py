@@ -4,7 +4,7 @@ import json
 from requests.api import delete
 from termcolor import colored, cprint
 
-from cloudflare import createDNSRecord, deleteDNSRecord, getZoneRecords, isValidDNSRecord
+from cloudflare import createDNSRecord, deleteDNSRecord, getZoneRecords, isValidDNSRecord, getZoneId
 from tailscale import getTailscaleDevice, isTailscaleIP
 from config import getConfig
 
@@ -12,7 +12,8 @@ import sys
 
 def main():
     config = getConfig()
-    cf_recordes = getZoneRecords(config['cf-key'], config['cf-domain'])
+    cf_ZoneId = getZoneId(config['cf-key'], config['cf-domain'])
+    cf_recordes = getZoneRecords(config['cf-key'], config['cf-domain'], zoneId=cf_ZoneId)
     ts_records = getTailscaleDevice(config['ts-key'], config['ts-tailnet'])
 
     records_typemap = {
@@ -36,7 +37,7 @@ def main():
             ip = ipaddress.ip_address(ts_rec['address'])
             if isValidDNSRecord(ts_rec['hostname']):
                 print("[{state}]: {host} -> {ip}".format(host=tsfqdn, ip=ts_rec['address'], state=colored("ADDING", "yellow")))
-                createDNSRecord(config['cf-key'], config['cf-domain'], ts_rec['hostname'], records_typemap[ip.version], ts_rec['address'],subdomain=config["cf-sub"])
+                createDNSRecord(config['cf-key'], config['cf-domain'], ts_rec['hostname'], records_typemap[ip.version], ts_rec['address'],subdomain=config["cf-sub"], zoneId=cf_ZoneId)
             else:
                 print("[{state}]: {host}.{tld} -> {ip} -> (Hostname: \"{host}.{tld}\" is not valid)".format(host=ts_rec['hostname'], ip=ts_rec['address'], state=colored("SKIPING", "red"), tld=config['cf-domain']))
 
@@ -75,7 +76,7 @@ def main():
                 continue
 
             print("[{state}]: {host} -> {ip}".format(host=cf_rec['name'], ip=cf_rec['content'], state=colored('DELETING', "yellow")))
-            deleteDNSRecord(config['cf-key'], config['cf-domain'], cf_rec['id'])
+            deleteDNSRecord(config['cf-key'], config['cf-domain'], cf_rec['id'], zoneId=cf_ZoneId)
 
 
 

@@ -20,8 +20,11 @@ def getZoneId(token, domain):
         exit(colored('getZoneId(): '+json.dumps(data['errors'], indent=2)), "red")
 
 
-def getZoneRecords(token, domain, hostname=False):
-    url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=getZoneId(token, domain))
+def getZoneRecords(token, domain, hostname=False, zoneId=False):
+    if zoneId != False:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=zoneId)
+    else:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records?per_page=150".format(zone_identifier=getZoneId(token, domain))
     payload={}
     headers = {
     'Authorization': "Bearer {}".format(token)
@@ -41,8 +44,11 @@ def getZoneRecords(token, domain, hostname=False):
     else:
         exit(colored("getZoneRecords() - error\n{}".format(json.dumps(data['errors'], indent=2)), "red"))
 
-def createDNSRecord(token, domain, name, type, content, subdomain=None):
-    url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
+def createDNSRecord(token, domain, name, type, content, subdomain=None, zoneId=False, priority=False, ttl=120):
+    if zoneId != False:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=zoneId)
+    else:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records".format(zone_identifier=getZoneId(token, domain))
     if subdomain:
         fqdn = name+"."+subdomain+"."+domain
     else:
@@ -52,7 +58,7 @@ def createDNSRecord(token, domain, name, type, content, subdomain=None):
         'type': type,
         'name': fqdn,
         'content': content,
-        'ttl': 120
+        'ttl': ttl
     }
     headers = {
         'Authorization': "Bearer {}".format(token)
@@ -68,8 +74,11 @@ def createDNSRecord(token, domain, name, type, content, subdomain=None):
         cprint("[ERROR]", 'red')
         exit("createDNSRecord():  "+json.dumps(data['errors'], indent=2))
 
-def deleteDNSRecord(token, domain, id):
-    url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records/{identifier}".format(zone_identifier=getZoneId(token, domain), identifier=id)
+def deleteDNSRecord(token, domain, id, zoneId=False):
+    if zoneId != False:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records/{identifier}".format(zone_identifier=zoneId, identifier=id)
+    else:
+        url = "https://api.cloudflare.com/client/v4/zones/{zone_identifier}/dns_records/{identifier}".format(zone_identifier=getZoneId(token, domain), identifier=id)
     headers = {
         'Authorization': "Bearer {}".format(token)
     }
