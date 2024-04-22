@@ -38,10 +38,11 @@ version: "3"
 secrets:
   cf-key:
     file: "./cloudflare-key.txt"
+  # either, use ts-key for an api key or ts-clientid and ts-clientsecret for oauth
   ts-key:
     file: "./tailscale-key.txt"
   ts-clientid:
-    file: "./tailscale-clientid.txt"
+    file: "./tailscale-clientid.txt" 
   ts-clientsecret:
     file: "./tailscale-clientsecret.txt"
 
@@ -79,6 +80,6 @@ Resource | include - specific zone - <your zone>
 1. Login to Tailscale website
 2. Create API key at: https://login.tailscale.com/admin/settings/authkeys
 
-#### Oauth
+#### OAuth
 1. Login to Tailscale website
-2. Create Oauth client at: https://login.tailscale.com/admin/settings/oauth with Devices Read permission
+2. Create OAuth client at: https://login.tailscale.com/admin/settings/oauth with Devices Read permission
