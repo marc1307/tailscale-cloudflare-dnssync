@@ -5,3 +5,5 @@ ipaddress==1.0.23
 requests==2.31.0
 termcolor==2.3.0
 urllib3==2.0.7
+requests-oauthlib==2.0.0
+oauthlib==3.2.2
