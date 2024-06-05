@@ -63,12 +63,29 @@ services:
 ```
 
 ### Run native using python
+#### setup environment
 ```
 python3 -m venv env
 source env/bin/activate
 pip install -r app/requirements.txt
 cd app
 python app.py
+```
+#### config.ini
+```ìni
+mode=               # optional; tailscale or headscale; defaults to tailscale
+
+cf-key=             # mandatory; cloudflare api key
+cf-domain=          # mandatory; cloudflare domain
+cf-sub=             # optional; add a subdomain
+
+ts-tailnet=         # mandatory in tailscale mode; tailnet name
+ts-key=             # mandatory in tailscale mode if apikey is used; tailscale api
+ts-client-id=       # mandatory in tailscale mode if oauth is used; tailscale oauth client id
+ts-client-secret=   # mandatory in tailscale mode if oauth is used; tailscale oauth client secret
+
+hs-baseurl=         # mandatory in headscale mode; headscale url
+hs-apikey=          # mandatory in headscale mode; headscale apikey
 ```
 
 ## Run with headscale
