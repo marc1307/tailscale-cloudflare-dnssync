@@ -23,6 +23,8 @@ cf-domain=<cloudflare target zone>
 #cf-sub=<subdomain to use, optional>
 ts-key=<tailscale api key>
 ts-tailnet=<tailnet>
+#ts-clientid=<oauth clientid, optional>
+#ts-clientsecret=<oauth clientsecret, optional>
 #prefix=<prefix for dns records, optional>
 #postfix=<postfix for dns records, optional>
 ```
@@ -36,8 +38,13 @@ version: "3"
 secrets:
   cf-key:
     file: "./cloudflare-key.txt"
+  # either, use ts-key for an api key or ts-clientid and ts-clientsecret for oauth
   ts-key:
     file: "./tailscale-key.txt"
+  ts-clientid:
+    file: "./tailscale-clientid.txt" 
+  ts-clientsecret:
+    file: "./tailscale-clientsecret.txt"
 
 services:
   cloudflare-dns-sync:
@@ -68,6 +75,11 @@ Resource | include - specific zone - <your zone>
 ```
 
 ### Tailscale
+
+#### API Key
 1. Login to Tailscale website
 2. Create API key at: https://login.tailscale.com/admin/settings/authkeys
 
+#### OAuth
+1. Login to Tailscale website
+2. Create OAuth client at: https://login.tailscale.com/admin/settings/oauth with Devices Read permission

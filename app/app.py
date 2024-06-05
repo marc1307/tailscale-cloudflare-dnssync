@@ -14,7 +14,7 @@ def main():
     config = getConfig()
     cf_ZoneId = getZoneId(config['cf-key'], config['cf-domain'])
     cf_recordes = getZoneRecords(config['cf-key'], config['cf-domain'], zoneId=cf_ZoneId)
-    ts_records = getTailscaleDevice(config['ts-key'], config['ts-tailnet'])
+    ts_records = getTailscaleDevice(config['ts-key'], config['ts-clientid'], config['ts-clientsecret'], config['ts-tailnet'])
 
     records_typemap = {
         4: 'A',
