@@ -4,8 +4,7 @@ from sys import path
 from termcolor import cprint
 
 keysToImport = ['cf-key', 'cf-domain', 'ts-tailnet']
-# maybe ts-client-id & ts-client-secret are better for names ?
-keysOptional = ['cf-sub', 'prefix', 'postfix', 'ts-key', 'ts-clientid', 'ts-clientsecret']
+keysOptional = ['cf-sub', 'prefix', 'postfix', 'ts-key', 'ts-client-id', 'ts-client-secret']
 
 def importkey(name, optional=False):
     key = name
@@ -53,8 +52,8 @@ def getConfig():
         static[key] = importkey(key)
     for key in keysOptional:
         static[key] = importkey(key, True)
-    if not static['ts-key'] and not (static['ts-clientid'] and static['ts-clientsecret']):
-        cprint("ERROR: mandatory tailscale configuration not found: ts-key or ts-clientid/ts-clientsecret missing", "red")
+    if not static['ts-key'] and not (static['ts-client-id'] and static['ts-client-secret']):
+        cprint("ERROR: mandatory tailscale configuration not found: ts-key or ts-client-id/ts-client-secret missing", "red")
         exit(1)
     return static
 
