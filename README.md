@@ -61,7 +61,13 @@ services:
 ```
 
 ### Run native using python
-tbd
+```
+python3 -m venv env
+source env/bin/activate
+pip install -r app/requirements.txt
+cd app
+python app.py
+```
 
 ## How to get API Keys
 ### Cloudflare
