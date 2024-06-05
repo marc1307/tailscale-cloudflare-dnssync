@@ -72,7 +72,8 @@ cd app
 python app.py
 ```
 #### config.ini
-```ìni
+```ini
+[DEFAULT]
 mode=               # optional; tailscale or headscale; defaults to tailscale
 
 cf-key=             # mandatory; cloudflare api key
