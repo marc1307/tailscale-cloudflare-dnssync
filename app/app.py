@@ -14,12 +14,20 @@ def main():
     config = getConfig()
     cf_ZoneId = getZoneId(config['cf-key'], config['cf-domain'])
     cf_recordes = getZoneRecords(config['cf-key'], config['cf-domain'], zoneId=cf_ZoneId)
-    ts_records = getTailscaleDevice(config['ts-key'], config['ts-client-id'], config['ts-client-secret'], config['ts-tailnet'])
+
+    # Get records depeneding on mode
+    if config['mode'] == "tailscale":
+        ts_records = getTailscaleDevice(config['ts-key'], config['ts-client-id'], config['ts-client-secret'], config['ts-tailnet'])
+    if config['mode'] == "headscale":
+        from headscale import getHeadscaleDevice
+        ts_records = getHeadscaleDevice(config['hs-apikey'], config['hs-baseurl'])
 
     records_typemap = {
         4: 'A',
         6: 'AAAA'
     }
+
+    print(colored("runnning in ","blue")+colored(config['mode'],"red"),colored("mode", "blue")+"\n")
 
     cprint("Adding new devices:", "blue")
 

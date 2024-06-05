@@ -1,5 +1,5 @@
 # tailscale-cloudflare-dnssync
-Syncs Tailscale host IPs to a cloudflare hosted DNS zone.
+Syncs Tailscale (or Headscale) host IPs to a cloudflare hosted DNS zone.
 Basically works like Magic DNS, but with your domain.
 The main benefit for me is the ability to use letsencrypt with certbot + dns challenge
 
@@ -9,6 +9,7 @@ The main benefit for me is the ability to use letsencrypt with certbot + dns cha
 - Updates DNS records after the hostname/alias changes
 - Add a pre- and/or postfixes to dns records
 - Checks if DNS records is part of tailscale network (100.64.0.0/12 or fd7a:115c:a1e0::/48) before deleting records :P
+- Support Tailscale and Headscale (tested with v0.22.3)
 
 
 ## Run
@@ -33,8 +34,6 @@ ts-tailnet=<tailnet>
 
 ### Run using docker (using secrets)
 ```yaml
-version: "3"
-
 secrets:
   cf-key:
     file: "./cloudflare-key.txt"
@@ -69,6 +68,17 @@ cd app
 python app.py
 ```
 
+## Run with headscale
+### Env Example
+```env
+mode=headscale
+cf-key=<cloudflare api key>
+cf-domain=<cloudflare target zone>
+
+hs-baseurl=https://headscale.example.com
+hs-apikey=≤headscale api key>
+```
+
 ## How to get API Keys
 ### Cloudflare
 1. Login to Cloudflare Dashboard
@@ -81,7 +91,6 @@ Resource | include - specific zone - <your zone>
 ```
 
 ### Tailscale
-
 #### API Key
 1. Login to Tailscale website
 2. Create API key at: https://login.tailscale.com/admin/settings/authkeys
@@ -89,3 +98,8 @@ Resource | include - specific zone - <your zone>
 #### OAuth
 1. Login to Tailscale website
 2. Create OAuth client at: https://login.tailscale.com/admin/settings/oauth with Devices Read permission
+
+### Headscale
+#### API Key
+1. Create a API Key using ```headscale apikeys create --expiration 90d```
+Docs: [Controlling headscale with remote CLI](https://github.com/juanfont/headscale/blob/main/docs/remote-cli.md#create-an-api-key)
