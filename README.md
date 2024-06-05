@@ -19,15 +19,18 @@ docker run --rm -it --env-file ~/git/tailscale-cloudflare-dnssync/env.txt ghcr.i
 ```
 Envfile:
 ```env
+# mode=<tailscale or headscale, default to tailscale if empty, optional>
 cf-key=<cloudflare api key>
 cf-domain=<cloudflare target zone>
-#cf-sub=<subdomain to use, optional>
+# cf-sub=<subdomain to use, optional>
+
 ts-key=<tailscale api key>
 ts-tailnet=<tailnet>
-#ts-clientid=<oauth clientid, optional>
-#ts-clientsecret=<oauth clientsecret, optional>
-#prefix=<prefix for dns records, optional>
-#postfix=<postfix for dns records, optional>
+# ts-clientid=<oauth clientid, optional>
+# ts-clientsecret=<oauth clientsecret, optional>
+
+# prefix=<prefix for dns records, optional>
+# postfix=<postfix for dns records, optional>
 ```
 > **ts-tailnet** can be found in the [Tailscale Settings](https://login.tailscale.com/admin/settings/general)
 ```Settings -> General -> Organization``` or at the top left on the admin panel.
@@ -102,4 +105,5 @@ Resource | include - specific zone - <your zone>
 ### Headscale
 #### API Key
 1. Create a API Key using ```headscale apikeys create --expiration 90d```
+
 Docs: [Controlling headscale with remote CLI](https://github.com/juanfont/headscale/blob/main/docs/remote-cli.md#create-an-api-key)
