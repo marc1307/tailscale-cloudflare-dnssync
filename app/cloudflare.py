@@ -87,7 +87,7 @@ def deleteDNSRecord(token, domain, id, zoneId=False):
     print("--> [CLOUDFLARE] [{code}] {msg}".format(code=response.status_code, msg=colored('record deleted', "green")))
 
 def isValidDNSRecord(name):
-    regex = "^([a-zA-Z]|\d|-|\.)*$"
+    regex = "^(\*\.)?([a-zA-Z]|\d|-|\.)*$"
     return re.match(regex, name)
 
 
