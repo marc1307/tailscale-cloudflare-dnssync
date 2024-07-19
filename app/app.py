@@ -17,10 +17,10 @@ def main():
 
     # Get records depeneding on mode
     if config['mode'] == "tailscale":
-        ts_records = getTailscaleDevice(config['ts-key'], config['ts-client-id'], config['ts-client-secret'], config['ts-tailnet'])
+        ts_records = getTailscaleDevice(config['ts-key'], config['ts-client-id'], config['ts-client-secret'], config['ts-tailnet'], config['ignore-ipv6'], config['wildcardhost'])
     if config['mode'] == "headscale":
         from headscale import getHeadscaleDevice
-        ts_records = getHeadscaleDevice(config['hs-apikey'], config['hs-baseurl'])
+        ts_records = getHeadscaleDevice(config['hs-apikey'], config['hs-baseurl'], config['ignore-ipv6'], config['wildcardhost'])
 
     records_typemap = {
         4: 'A',
