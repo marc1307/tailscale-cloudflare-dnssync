@@ -4,7 +4,7 @@ from sys import path
 from termcolor import cprint
 
 keysToImport = ['cf-key', 'cf-domain', 'ts-tailnet']
-keysOptional = ['cf-sub', 'prefix', 'postfix', 'ts-key', 'ts-client-id', 'ts-client-secret', "mode", "hs-baseurl", "hs-apikey"]
+keysOptional = ['cf-sub', 'prefix', 'postfix', 'ts-key', 'ts-client-id', 'ts-client-secret', "mode", "hs-baseurl", "hs-apikey", 'ignore-ipv6', 'wildcardhost']
 
 def importkey(name, optional=False):
     key = name

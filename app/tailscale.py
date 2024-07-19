@@ -6,7 +6,7 @@ from requests_oauthlib import OAuth2Session
 from termcolor import colored
 
 ### Get Data
-def getTailscaleDevice(apikey, clientid, clientsecret, tailnet):
+def getTailscaleDevice(apikey, clientid, clientsecret, tailnet, ignoreipv6=False, wildcardhost=False):
     if clientid and clientsecret:
         token = OAuth2Session(client=BackendApplicationClient(client_id=clientid)).fetch_token(token_url='https://api.tailscale.com/api/v2/oauth/token', client_id=clientid, client_secret=clientsecret)
         apikey = token["access_token"]
@@ -28,7 +28,12 @@ def getTailscaleDevice(apikey, clientid, clientsecret, tailnet):
             for address in device['addresses']:
                 output.append({'hostname': alterHostname(device['hostname']), 'address': address})
                 if device['name'].split('.')[0].lower() != device['hostname'].lower():
+                    ip = ipaddress.ip_address(address)
+                    if ip.version == 6 and ignoreipv6:
+                        continue
                     output.append({'hostname': alterHostname(device['name'].split('.')[0].lower()), 'address': address})
+                    if wildcardhost:
+                        output.append({'hostname': "*.{host}".format(host=alterHostname(device['name'].split('.')[0].lower())), 'address': address})
         return output
     else:
         exit(colored("getTailscaleDevice() - {status}, {error}".format(status=str(response.status_code), error=data['message']), "red"))
