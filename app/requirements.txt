@@ -4,7 +4,7 @@ idna==3.10
 ipaddress==1.0.23
 oauthlib==3.2.2
 packaging==24.2
-requests==2.32.3
+requests==2.32.4
 requests-oauthlib==2.0.0
 termcolor==2.5.0
 urllib3==2.3.0
